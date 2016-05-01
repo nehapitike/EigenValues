@@ -5,14 +5,14 @@ using System.IO;
 
 namespace EV
 {
-    public class BLAS : Hub
+    public class EV : Hub
     {
         public double[,] QR(double[,] mat1, int mat2)
         {
             double[,] A = mat1;
             int M = mat1.GetLength(0);
             int N = mat1.GetLength(1);// number of rows in matrix A
-            double[,] Q = new double[M, N]; // dot product D
+            double[,] Q = new double[M, N]; 
             double[,] R = new double[N, N];
             double[] T = new double[M * N];
             string[] D = new string[N];
@@ -62,7 +62,7 @@ namespace EV
             
         }
 
-        public string[] Blas1(String mat1, String connID)
+        public string[] eigenValue(String mat1, String connID)
         {
             
             var A = JsonConvert.DeserializeObject<Matrix>(mat1);
@@ -70,14 +70,14 @@ namespace EV
             int N = A.size[1]; // the number of columns in matrix A 
             int M = A.size[0]; // number of rows in matrix A
             string[] D = new string[M]; 
-            double[,] Q = new double[M, M]; // dot product D
+            double[,] Q = new double[M, M]; 
             double[,] R = new double[M, M];
             double[,] U = new double[M, M]; 
-            //if (N != M)
-            //{
-              //  Clients.Client(connID).displayError1();
-                //return D;
-           // }
+            if (N != M)
+            {
+                Clients.Client(connID).displayError1();
+                return D;
+            }
             
             for (int i = 0; i < M; i++ )
             {
@@ -86,6 +86,7 @@ namespace EV
                     U[i, j] = A.data[i, j];
                 }
             }
+            //Computing QR and calculatring A=RQ for 100 iterations to converge
             R = QR(U, 1);
             Q = QR(U, 2);
             U = Blas3(R, Q);
@@ -99,12 +100,9 @@ namespace EV
             
             string strC = "";
             for (int i = 0; i < M; i++)
-            {
-                //for (int j = 0; j < N; j++)
-                //{
+            {            
                     strC = U[i, i].ToString();
                     Clients.Client(connID).store(strC);
-                //}
             }
             
             D[1] = M.ToString();
