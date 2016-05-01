@@ -28,20 +28,12 @@ $(function () {
     blas.client.displayOutput = function (product1) {
         
         var productObj1 = JSON.parse(product1);              
-        productObj1 = parseInt(productObj1);             
-        var z = 0;        
-        for (i = 0; i < productObj1; i++) {            
-            displayOutput += '[';
-            for (j = 0; j < productObj1; j++) {
-                displayOutput += data[z];
-                z++;
-                if (j != productObj1 - 1) {
+        productObj1 = parseInt(productObj1);                  
+        for (i = 0; i < data.length; i++) {            
+            displayOutput += '[' + data[i]+']';                
+            if (i != data.length - 1) {
                     displayOutput += ',';
-                } else displayOutput += ']';
-            }
-            if (z != data.length) {
-                displayOutput += ',';
-            }
+                } else displayOutput += ']';                        
         }
 
         document.getElementById("Product").innerHTML = 'EigenValues ' + displayOutput;
