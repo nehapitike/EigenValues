@@ -1,7 +1,7 @@
 $(function () {
 
     // Declare a proxy to reference the hub.
-    var blas = $.connection.bLAS;
+    var blas = $.connection.eV;
     var i = 0;
     var data = [];
     var displayOutput = "[";
@@ -10,21 +10,22 @@ $(function () {
         alert('Now connected, connection ID=' + $.connection.hub.id)
         $('#send').click(function () {
             var mat1JSON = $('#mat1').val();           
-            // Call the QR decomposition method on the hub.       
-            blas.server.blas1(mat1JSON, $.connection.hub.id);
+            // Call the QR decomposition method to solve for eigenvalues on the hub.       
+            blas.server.eigenValue(mat1JSON, $.connection.hub.id);
         });
     });
+    // Matrix should be a square matrix, if not display below error
     blas.client.displayError1 = function () {
         document.getElementById("Product").innerHTML = 'Input Matrix A should be a square matrix';
     };
-    // Create a function that the hub can call to store the solution.
+    // Create a function that the hub can call to store the eigenvalues.
     blas.client.store = function (product) {
         
         var productObj = JSON.parse(product);        
         data[i] = productObj;       
         i++;
     };
-    //Create a function that hub can call to display the final output
+    //Create a function that hub can call to display the eigenvalues
     blas.client.displayOutput = function (product1) {
         
         var productObj1 = JSON.parse(product1);              
