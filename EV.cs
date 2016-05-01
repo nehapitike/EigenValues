@@ -10,14 +10,15 @@ namespace EV
         public double[,] QR(double[,] mat1, int mat2)
         {
             double[,] A = mat1;
-            int M = mat1.GetLength(0); // number of rows in matrix A
-            double[,] Q = new double[M, M]; // dot product D
-            double[,] R = new double[M, M];
-            double[] T = new double[M * M];
-            string[] D = new string[M];
+            int M = mat1.GetLength(0);
+            int N = mat1.GetLength(1);// number of rows in matrix A
+            double[,] Q = new double[M, N]; // dot product D
+            double[,] R = new double[N, N];
+            double[] T = new double[M * N];
+            string[] D = new string[N];
             double sum = 0;
             // Solving for each row of R and each column of Q in a iteration.
-            for (int i = 0; i < M; i++)
+            for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < M; j++)
                 {
@@ -30,9 +31,9 @@ namespace EV
 
                 }
                 sum = 0;
-                if (i < M - 1)
+                if (i < N - 1)
                 {
-                    for (int d = i; d < M - 1; d++)
+                    for (int d = i; d < N - 1; d++)
                     {
                         sum = 0;
                         for (int j = 0; j < M; j++)
@@ -48,8 +49,9 @@ namespace EV
                 }
                 sum = 0;
 
-            }           
-            if (mat2 == 1)
+            }
+
+            if (mat2 == 2)
             {
                 return Q;
             }
@@ -79,32 +81,30 @@ namespace EV
             
             for (int i = 0; i < M; i++ )
             {
-                for (int j =0; j<M ; j++)
+                for (int j =0; j<N; j++)
                 {
                     U[i, j] = A.data[i, j];
                 }
             }
-            Q = QR(U, 1);
-            R = QR(U, 2);
+            R = QR(U, 1);
+            Q = QR(U, 2);
             U = Blas3(R, Q);
             
-            for (int i = 0; i < 0; i++ )
+            for (int i = 0; i < 100; i++ )
             {
-                Q = QR(U,1);
-                R = QR(U,2);
+                R = QR(U,1);
+                Q = QR(U,2);
                 U = Blas3(R, Q);
             }
             
             string strC = "";
             for (int i = 0; i < M; i++)
             {
-                for (int j = 0; j < M; j++)
-                {                    
-                    strC =R[i, j].ToString() ;
-                    Clients.Client(connID).store(strC);                  
-                }
-                
-                
+                //for (int j = 0; j < N; j++)
+                //{
+                    strC = U[i, i].ToString();
+                    Clients.Client(connID).store(strC);
+                //}
             }
             
             D[1] = M.ToString();
