@@ -49,7 +49,7 @@ namespace EV
                 }
                 sum = 0;
 
-            }
+            }           
 
             if (mat2 == 2)
             {
@@ -90,21 +90,33 @@ namespace EV
             R = QR(U, 1);
             Q = QR(U, 2);
             U = Blas3(R, Q);
-            
-            for (int i = 0; i < 100; i++ )
+
+            for (int i = 0; i < 300; i++)
             {
-                R = QR(U,1);
-                Q = QR(U,2);
+                R = QR(U, 1);
+                Q = QR(U, 2);
                 U = Blas3(R, Q);
             }
             
             string strC = "";
             for (int i = 0; i < M; i++)
-            {            
+            {
+                if (Math.Round(U[i, i]) == 0)
+                {
+                    U[i, i] = Math.Round(U[i, i]);
+                }
                     strC = U[i, i].ToString();
                     Clients.Client(connID).store(strC);
             }
-            
+            //for (int i = 0; i < M; i++)
+            //{
+             //   for (int j = 0; j < N; j++)
+              //  {
+               //     strC = U[i, j].ToString();
+                //    Clients.Client(connID).store(strC);
+                //}
+                   
+            //}
             D[1] = M.ToString();
             Clients.Client(connID).displayOutput(M.ToString());
             Console.Out.WriteLine(R);
